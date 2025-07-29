@@ -82,4 +82,5 @@ chmod +x file.sh       # Rende il file eseguibile
 wget https://en.wikipedia.org/robots.txt   # Scarica file da URL
 
 # 🔒 Sicurezza: Sovrascrittura dello spazio libero
+rm -rf ~/.local/share/Trash/*
 sudo sfill -v /home && echo "🔒 Sfill eseguito su /home"	# Sovrascrive lo spazio libero in /home in modo sicuro
