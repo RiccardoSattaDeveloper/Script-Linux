@@ -67,7 +67,4 @@ sudo apt autoclean && echo "🧼 Autoclean apt completato"
 # 8. Trim SSD
 sudo fstrim -av && echo "💾 Fstrim completato"
 
-# 9. Sovrascrittura spazio libero
-sudo sfill -v /home && echo "🔒 Sfill eseguito su /home"
-
 echo "✅ Pulizia completata: $(date)"
