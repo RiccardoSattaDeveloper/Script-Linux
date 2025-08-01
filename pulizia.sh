@@ -67,4 +67,8 @@ sudo apt autoclean && echo "🧼 Autoclean apt completato"
 # 8. Trim SSD
 sudo fstrim -av && echo "💾 Fstrim completato"
 
+# 89. Cancella cronologia bash e comandi digitati
+rm ~/.bash_history
+history -c
+
 echo "✅ Pulizia completata: $(date)"
