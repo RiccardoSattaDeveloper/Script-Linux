@@ -76,12 +76,12 @@ find /var/log -type f -name "*.gz" -delete && echo "🧨 Rimossi log compressi"
 # 10. Gestione file di log troppo grandi (es. sopra 100MB)
 find /var/log -type f -size +100M -exec truncate -s 0 {} \; -print
 
-# 11. Trim SSD
-sudo fstrim -av && echo "💾 Fstrim completato"
-
-# 12. Cancellare i file temporanei di sistema e la cache utente
+# 11. Cancellare i file temporanei di sistema e la cache utente
 rm -rf /tmp/*
 rm -rf ~/.cache/*
+
+# 12. Trim SSD
+sudo fstrim -av && echo "💾 Fstrim completato"
 
 echo "✅ Pulizia completata: $(date)"
 
