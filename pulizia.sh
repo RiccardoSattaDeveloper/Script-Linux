@@ -59,16 +59,32 @@ sudo systemctl restart systemd-journald && echo "🔁 Riavviato systemd-journald
 # 6. Ricarica daemon
 sudo systemctl daemon-reload && echo "♻️  Ricaricato systemd"
 
-# 7. Pulizia pacchetti inutilizzati
+# 7. Pulizia Snap
+sudo snap list --all | awk '/disabled/{print $1, $3}' |
+  while read snapname revision; do
+    sudo snap remove "$snapname" --revision="$revision"
+  done
+
+# 8. Pulizia pacchetti inutilizzati
 sudo apt autoremove -y && echo "📦 Autoremove completato"
 sudo apt clean && echo "🧽 Pulizia cache apt completata"
 sudo apt autoclean && echo "🧼 Autoclean apt completato"
 
-# 8. Trim SSD
+# 9. Rimozione di log compressi vecchi
+find /var/log -type f -name "*.gz" -delete && echo "🧨 Rimossi log compressi"
+
+# 10. Gestione file di log troppo grandi (es. sopra 100MB)
+find /var/log -type f -size +100M -exec truncate -s 0 {} \; -print
+
+# 11. Trim SSD
 sudo fstrim -av && echo "💾 Fstrim completato"
+
+# 12. Cancellare i file temporanei di sistema e la cache utente
+rm -rf /tmp/*
+rm -rf ~/.cache/*
 
 echo "✅ Pulizia completata: $(date)"
 
-# 9. Cancella cronologia bash e comandi digitati
+# 13. Cancella cronologia bash e comandi digitati
 rm ~/.bash_history
 history -c
