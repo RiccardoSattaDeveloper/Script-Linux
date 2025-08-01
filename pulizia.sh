@@ -1,16 +1,8 @@
 #!/bin/bash
 
-# 🧹 Script avanzato per la pulizia dei log e file temporanei
-
-# 🔐 Verifica dei permessi di root
-if [ "$EUID" -ne 0 ]; then
-  echo "❌ Questo script deve essere eseguito come root (usa sudo)."
-  exit 1
-fi
-
 echo "📅 Avvio pulizia: $(date)"
 
-# 📦 Liste di elementi da gestire
+# Lista di file da rimuovere se esistono
 files_to_remove=(
   "/var/log/syslog"
   "/var/log/kern.log"
@@ -18,6 +10,7 @@ files_to_remove=(
   "/var/log/dpkg.log"
 )
 
+# Lista di file da troncare
 files_to_truncate=(
   "/var/log/faillog"
   "/var/log/lastlog"
@@ -25,6 +18,7 @@ files_to_truncate=(
   "/var/log/btmp"
 )
 
+# Directory da svuotare
 dirs_to_clear=(
   "/var/log/apache2"
   "/var/log/mysql"
@@ -33,65 +27,48 @@ dirs_to_clear=(
   "/var/log/journal"
 )
 
-# ⚙️ Funzioni modulari
-cleanup_file() {
-  local file="$1"
-  if [ -f "$file" ]; then
-    rm -f "$file" && echo "🗑️ Rimosso: $file"
-  fi
-}
-
-truncate_file() {
-  local file="$1"
-  if [ -f "$file" ]; then
-    truncate -s 0 "$file" && echo "✂️  Troncato: $file"
-  fi
-}
-
-clear_directory() {
-  local dir="$1"
-  if [ -d "$dir" ]; then
-    rm -rf "$dir"/* && echo "🧹 Pulita directory: $dir"
-  fi
-}
-
-# ✅ Pulizia file di log
+# 1. Rimozione file
 for file in "${files_to_remove[@]}"; do
-  cleanup_file "$file"
+  if [ -f "$file" ]; then
+    sudo rm -f "$file" && echo "🗑️ Rimosso: $file"
+  fi
 done
 
+# 2. Tronca i file di log senza eliminarli
 for file in "${files_to_truncate[@]}"; do
-  truncate_file "$file"
+  if [ -f "$file" ]; then
+    sudo truncate -s 0 "$file" && echo "✂️  Troncato: $file"
+  fi
 done
 
+# 3. Pulizia delle directory di log
 for dir in "${dirs_to_clear[@]}"; do
-  clear_directory "$dir"
+  if [ -d "$dir" ]; then
+    sudo rm -rf "$dir"/* && echo "🧹 Pulita directory: $dir"
+  fi
 done
 
-# 🧽 Pulizia buffer kernel
-dmesg --clear && echo "🧽 Pulito buffer kernel (dmesg)"
+# 4. Pulizia dmesg (buffer del kernel)
+sudo dmesg --clear && echo "🧽 Pulito dmesg"
 
-# 📓 Pulizia e rotazione dei log di sistema
-journalctl --rotate && echo "🔄 Ruotato journal"
-journalctl --vacuum-time=1s && echo "🧺 Pulito journalctl (1s)"
-systemctl restart systemd-journald && echo "🔁 Riavviato journald"
+# 5. Rotazione e pulizia journalctl
+sudo journalctl --rotate && echo "🔄 Ruotato journal"
+sudo journalctl --vacuum-time=1s && echo "🧺 Pulito journal (vacuum)"
+sudo systemctl restart systemd-journald && echo "🔁 Riavviato systemd-journald"
 
-# ♻️ Reload daemon di sistema
-systemctl daemon-reexec && echo "♻️  Ricaricato systemd"
+# 6. Ricarica daemon
+sudo systemctl daemon-reload && echo "♻️  Ricaricato systemd"
 
-# 🧹 Pulizia pacchetti APT
-apt autoremove -y && echo "📦 Autoremove completato"
-apt clean && echo "🧽 Pulizia cache apt completata"
-apt autoclean && echo "🧼 Autoclean apt completato"
+# 7. Pulizia pacchetti inutilizzati
+sudo apt autoremove -y && echo "📦 Autoremove completato"
+sudo apt clean && echo "🧽 Pulizia cache apt completata"
+sudo apt autoclean && echo "🧼 Autoclean apt completato"
 
-# 💾 SSD TRIM (per dispositivi compatibili)
-fstrim -av && echo "💾 Fstrim completato"
+# 8. Trim SSD
+sudo fstrim -av && echo "💾 Fstrim completato"
 
-# 🧑‍💻 Pulizia cronologia della shell
-shred -u ~/.bash_history 2>/dev/null
-history -c
-history -w
-echo "🗑️ Cronologia bash eliminata"
-
-# 📆 Fine script
 echo "✅ Pulizia completata: $(date)"
+
+# 9. Cancella cronologia bash e comandi digitati
+rm ~/.bash_history
+history -c
