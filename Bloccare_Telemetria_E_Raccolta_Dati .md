@@ -8,20 +8,6 @@ ff00::0         ip6-mcastprefix
 ff02::1         ip6-allnodes
 ff02::2         ip6-allrouters
 
-# --- Blocchi di telemetria Ubuntu ---
-127.0.0.1       metrics.ubuntu.com
-127.0.0.1       popcon.ubuntu.com
-127.0.0.1       connectivity-check.ubuntu.com
-127.0.0.1       ntp.ubuntu.com
-127.0.0.1       crashportal.ubuntu.com
-127.0.0.1       errors.ubuntu.com
-127.0.0.1       oem.archive.canonical.com
-127.0.0.1       security.ubuntu.com
-127.0.0.1       changelogs.ubuntu.com
-127.0.0.1       snapcraft.io
-127.0.0.1       api.snapcraft.io
-127.0.0.1       motd.ubuntu.com
-
 # --- Blocchi Google Analytics e tracciamento ---
 127.0.0.1       www.google-analytics.com
 127.0.0.1       analytics.google.com
