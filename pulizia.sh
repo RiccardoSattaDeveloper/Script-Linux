@@ -2,6 +2,9 @@
 
 echo "📅 Avvio pulizia: $(date)"
 
+# Definisce $USER_HOME
+USER_HOME=$(eval echo "~$SUDO_USER")
+
 # Lista di file da rimuovere se esistono
 files_to_remove=(
   "/var/log/syslog"
