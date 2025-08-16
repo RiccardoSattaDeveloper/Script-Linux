@@ -1,7 +1,7 @@
 # Accedere a: 'sudo nano /etc/hosts'
 
 127.0.0.1       localhost
-127.0.1.1       RiccardoPC
+127.0.1.1       # Inserire il nome del proprio PC
 
 # IPv6 settings
 ::1             ip6-localhost ip6-loopback
@@ -30,4 +30,3 @@ ff02::2         ip6-allrouters
 127.0.0.1       tags.tiqcdn.com
 127.0.0.1       js-agent.newrelic.com
 127.0.0.1       bam.nr-data.net
-
