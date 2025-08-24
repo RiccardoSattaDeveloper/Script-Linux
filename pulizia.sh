@@ -83,15 +83,15 @@ if [ -d "$USER_HOME/.cache" ]; then
   sudo rm -rf "$USER_HOME/.cache/"*
 fi
 
-# 13. Cancella cronologie bash e zsh utente
+# 13. Trim SSD
+sudo fstrim -av
+
+# 14. Cancella cronologie bash e zsh utente
 for histfile in ".bash_history" ".zsh_history"; do
   target="$USER_HOME/$histfile"
   if [ -f "$target" ]; then
     sudo rm -f "$target"
   fi
 done
-
-# 14. Trim SSD
-sudo fstrim -av
 
 echo "✅ Pulizia completata: $(date)"
